@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres:12-alpine
+    container_name: "galactic-trade-order-database"
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - galactic-trade
+    volumes:
+      - database_postgres:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: "galactic-trade-order-service"
+    environment:
+      - DB_USERNAME=$DB_USERNAME
+      - DB_PASSWORD=$DB_PASSWORD
+      - DB_DB=$DB_DB
+      - DB_HOST=$DB_HOST
+      - DB_NAME=$DB_NAME
+      - DB_PORT=$DB_PORT
+      - SSL_MODE=$SSL_MODE
+      - JWT_KEY=$JWT_KEY
+      - AUTH_SERVICE=$AUTH_SERVICE
+      - PRODUCT_SERVICE=$PRODUCT_SERVICE
+    ports:
+      - "8084:8080"
+    depends_on:
+      - db
+    networks:
+      - galactic-trade
+
+volumes:
+  database_postgres:
+
+networks:
+  galactic-trade:
+    driver: bridge
