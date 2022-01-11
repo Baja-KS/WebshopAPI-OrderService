@@ -1,4 +1,4 @@
-module OrderService
+module github.com/Baja-KS/WebshopAPI-OrderService
 
 go 1.16
 
